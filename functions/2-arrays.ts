@@ -3,7 +3,8 @@
  * 
  * Retourne -1 si le tableau est vide.
  */
-export function getFirstNumber(): void {
+export function getFirstNumber(posNum: number[]): number {
+    return posNum?.[0] ?? -1
 }
 
 /**
@@ -12,7 +13,8 @@ export function getFirstNumber(): void {
  * @param songs Liste de chansons
  * @returns La dernière chaîne de caractères
  */
-export function getLastSongPlayed(): void {
+export function getLastSongPlayed(songs: string[]): string {
+    return songs?.[songs.length-1] ?? "0 song found"
 }
 
 /**
@@ -22,7 +24,18 @@ export function getLastSongPlayed(): void {
  * 
  * Pour apprendre à vous servir de "reduce" : https://medium.com/free-code-camp/three-ways-to-find-the-longest-word-in-a-string-in-javascript-a2fb04c9757c#720b
  */
-export function findLongestWord(): void {
+export function findLongestWord(words: string[]): string {
+    if (words.length == 0) {
+        return "0 words found"
+    }
+    const longestWord: string = words.reduce(function(longest: string, current: string): string{
+        if (current.length>longest.length) {
+            return current
+        } else {
+            return longest
+        }
+    }, "")
+    return longestWord
 }
 
 /**
@@ -31,7 +44,9 @@ export function findLongestWord(): void {
  * @param length La taille du tableau à créer (number)
  * @param defaultValue La valeur par défaut (string)
  */
-export function fillArrayWithDefaultValue(): void {
+export function fillArrayWithDefaultValue(taille: number, vDef: string): string[] {
+    const arr: string [] = new Array(taille).fill(vDef);
+    return arr
 }
 
 /**
@@ -44,7 +59,13 @@ export function fillArrayWithDefaultValue(): void {
  * @param arrayToSort Le tableau de chaînes de caractères à trier
  * @returns Le tableau trié
  */
-export function sortBySize(): void {
+export function sortBySize(arrayToSort: string[]): string[] {
+    const newArr: string[] = arrayToSort.slice();
+    if (newArr.length == 0) {
+        newArr[0] = "0 string found"
+    }
+    newArr.sort((a, b) => a.length - b.length);
+    return newArr;
 }
 
 // ----------- TABLEAUX AVEC DES UNIONS -----------
@@ -55,7 +76,13 @@ export function sortBySize(): void {
  * @param array Utilisation d'un tableau avec types multiples : https://www.geeksforgeeks.org/defining-array-with-multiple-types-in-typescript/
  * @returns Le résultat de la somme de type "number"
  */
-export function sumStringsAndNumbers(): void {
+type NumStr = number | string
+
+export function sumStringsAndNumbers(arrNumStr: NumStr[]): number {
+  return arrNumStr.reduce((prev: number, current: NumStr) => {
+    const num = typeof current === 'string' ? Number(current) : current
+    return prev + num
+  }, 0)
 }
 
 /**
@@ -67,8 +94,11 @@ export function sumStringsAndNumbers(): void {
  * @param array Un tableau pouvant contenir des "string" mais également des éléments "null"
  * @returns Tableau de chaînes de caractères résultat
  */
-export function stringsOnly(): void {
- }
+type StrNull = string | null
+
+export function stringsOnly(array: StrNull[]): string[] {
+  return array.filter((elem): elem is string => elem !== null)
+}
 
 // ----------- TUPLES -----------
 
@@ -82,7 +112,13 @@ export function stringsOnly(): void {
  * @param userInfo Un tuple contenant les informations utilisateur
  * @returns Le nom utilisateur généré.
  */
-export function generateUsername(): void {
+export function generateUsername(userInfo: NumStr[]): string {
+    if (userInfo.length !== 3) {
+        return 'error: 0 info found'
+    }
+    
+    const res = userInfo[1].toString().toLowerCase() + userInfo[0].toString().toLowerCase().slice(0, 2) + '_' + userInfo[2].toString();
+    return res;
 }
 
 /**
@@ -90,6 +126,10 @@ export function generateUsername(): void {
  * TODO : à compléter avec {North, South, East, West}
  */
 export enum Direction {
+  North = 'North',
+  South = 'South',
+  East = 'East',
+  West = 'West',
 }
 
 /**
@@ -111,5 +151,25 @@ export enum Direction {
  * @param direction Enum présentant une direction (North, South, East, West)
  * @returns Les nouvelles coordonnées (tuple)
  */
-export function getNextMapCoord(): void { 
+
+export function getNextMapCoord(coordinates: number[], direction: Direction): number[] { 
+    if (coordinates.length != 2) {
+        throw console.error('error: inproper format for starting coordiantes');
+         
+    }
+    switch (direction) {
+      case 'North':
+        coordinates[1] += 1
+        break
+      case 'South':
+        coordinates[1] -= 1
+        break
+      case 'East':
+        coordinates[0] += 1
+        break
+      case 'West':
+        coordinates[0] -= 1
+        break
+    }
+    return coordinates;
 }

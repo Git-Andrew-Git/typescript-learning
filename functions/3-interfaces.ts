@@ -7,6 +7,9 @@
  * - address
  */
 interface Contact {
+    id: number,
+    name: string,
+    address: string
 }
 
 /**
@@ -15,7 +18,8 @@ interface Contact {
  * @param contact Le contact à traiter
  * @returns l'adress du contact
  */
-export function getAddress(): void {
+export function getAddress(contact: Contact): string {
+    return contact.address;
 }
 
 /**
@@ -24,7 +28,8 @@ export function getAddress(): void {
  * @param friends La liste de contact concernée
  * @returns Le nombre d'amis
  */
-export function howManyFriends(): void {
+export function howManyFriends(friends: Contact[]): number{
+    return friends.length;
 }
 
 /**
@@ -34,7 +39,17 @@ export function howManyFriends(): void {
  * @param contacts Tableau de contacts à traiter 
  * @returns Une adresse ou "null"
  */
-export function findTheBat(): void {
+type StrNull = string | null;
+export function findTheBat(contacts: Contact[]): StrNull {
+    if (contacts.length<1) {
+        throw new Error("There are no contacts");
+    }
+    for (let i = 0; i < contacts.length; i++) {
+        if (contacts[i].name == "Batman") {
+            return contacts[i].address;
+        }
+    }
+    return null
 }
 
 // ----------- CLEF OPTIONNELLES -----------
@@ -52,6 +67,11 @@ export function findTheBat(): void {
  * - email : email de l'utilisateur (optionnel)
  */
 interface User {
+    name: string,
+    verified: boolean,
+    address?: string,
+    picture?: string,
+    email?: string
 }
 
 /**
@@ -60,7 +80,9 @@ interface User {
  * @param name Le nom de l'utilisateur
  * @returns Nouvel objet "User"
  */
-export function generateNewUser(): void {
+export function generateNewUser(name: string): User {
+    const user1 = {name: name, verified: false} as User
+    return user1
 }
 
 /**
@@ -78,7 +100,9 @@ export function generateNewUser(): void {
  * @param email Nouvel email en chaîne de caractères
  * @returns Nouvel objet "User" avec les informations à jour
  */
-export function verifyUser(): void {
+export function verifyUser(user: User, email: string): User {
+    const newUser = {...user, email, verified: true}
+    return newUser
 }
 
 
@@ -89,7 +113,9 @@ export function verifyUser(): void {
  * @param pictureUrl L'URL vers la photo de l'utilisateur
  * @returns Nouvel objet "User" avec les informations à jour
  */
-export function updateUserPhoto(): void {
+export function updateUserPhoto(user: User, pictureUrl: string): User {
+    const newUser = {...user, picture: pictureUrl, verified: false};
+    return newUser;
 }
 
 
@@ -101,7 +127,9 @@ export function updateUserPhoto(): void {
  * @param user L'objet "User" concerné par l'opération
  * @returns La chaîne de caractères attendue
  */
-export function getUserPhoto(): void {
+export function getUserPhoto(user: User): string {
+    const newUser = {...user, verified: false}
+    return newUser.picture ?? 'https://place.dog/300/200'
 }
 
 /**
@@ -116,5 +144,7 @@ export function getUserPhoto(): void {
  * @param users Le Json comprenant plusieurs objets "User"
  * @returns L'objet "User" retrouvé ou "null" si aucun utilisateur associé à la clef
  */
-export function getUser(): void {
+type UserNull = User | null
+export function getUser(id: number, users: Record<number, User>): UserNull {
+    return users[id] ?? null
 }
